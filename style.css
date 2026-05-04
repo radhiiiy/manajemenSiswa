@@ -1,0 +1,310 @@
+/* =========================================
+   1. RESET & BASE STYLES
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #fcfcfc;
+}
+
+/* =========================================
+   2. STYLES HALAMAN INDEX (PILIH LOGIN)
+   ========================================= */
+.header-main {
+    background-color: #2b4f7a;
+    color: white;
+    text-align: center;
+    padding: 25px 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+}
+
+.section-guru {
+    flex: 1;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-siswa {
+    flex: 1;
+    background-color: #3f6aa5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.choice-card {
+    width: 320px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 6px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.choice-card:hover {
+    transform: scale(1.03);
+}
+
+.card-guru { background-color: #9cbdf8; color: #000000; }
+.card-siswa { background-color: #ffffff; color: #000000; }
+
+/* =========================================
+   3. STYLES HALAMAN FORM LOGIN
+   ========================================= */
+.header-login {
+    background-color: #35547a; 
+    height: 120px;
+    width: 100%;
+}
+
+.login-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 60px;
+}
+
+.login-box {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 50px 40px;
+    border-radius: 8px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.login-box h2 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 40px;
+}
+
+.input-group { margin-bottom: 20px; }
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #7a7a7a;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.input-group input:focus { border-color: #1461b6; }
+
+.btn-masuk {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    background-color: #1461b6;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-masuk:hover { background-color: #0e4e94; }
+
+
+/* =========================================
+   4. STYLES DASHBOARD (UMUM & GURU)
+   ========================================= */
+.dashboard-wrapper {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f6f9; /* Latar belakang area konten */
+}
+
+/* Sidebar Kiri */
+.sidebar {
+    width: 260px;
+    background-color: #35547a; 
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.profile-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid white;
+    margin: 0 auto 15px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-icon svg { width: 50px; color: white; }
+.profile-section h3 { font-size: 22px; font-weight: 600; letter-spacing: 1px; }
+
+.sidebar-nav { flex: 1; padding-top: 20px; }
+.sidebar-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    margin-bottom: 5px;
+    transition: background 0.2s;
+}
+
+.sidebar-nav a:hover { background-color: rgba(255, 255, 255, 0.1); }
+.sidebar-nav a.active { font-weight: bold; }
+
+.logout-btn {
+    padding: 20px 30px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Area Konten Utama Kanan */
+.content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.content-header {
+    background-color: #4c75a8;
+    color: white;
+    padding: 20px 30px;
+}
+
+.content-header h1 { font-size: 24px; }
+
+.dashboard-body { padding: 30px; }
+
+/* Grid Kartu Statistik 4 Kolom */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-left: 8px solid transparent;
+}
+
+.stat-card .stat-title { 
+    font-weight: bold; 
+    font-size: 14px; 
+    margin-bottom: 15px; 
+    color: #000; 
+}
+
+.stat-card .stat-number { 
+    font-size: 32px; 
+    font-weight: bold; 
+    color: #000; 
+}
+
+/* Warna border kiri pada masing-masing kartu (Guru) */
+.border-red { border-left-color: #ff4d4d; }
+.border-purple { border-left-color: #6c5ce7; }
+.border-yellow { border-left-color: #fdcb6e; }
+.border-green { border-left-color: #00b894; }
+
+/* Container Grafik Umum */
+.chart-container {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    height: 400px;
+}
+
+.chart-title { 
+    margin-bottom: 20px; 
+    font-size: 18px; 
+    color: #333; 
+}
+
+
+/* =========================================
+   5. STYLES KHUSUS DASHBOARD OPERATOR
+   ========================================= */
+.operator-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.chart-box {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.chart-box h4 {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+
+/* =========================================
+   6. RESPONSIVE DESIGN (UNTUK HP)
+   ========================================= */
+@media (max-width: 1024px) {
+    .operator-charts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .main-content { flex-direction: column; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .operator-charts-grid { grid-template-columns: 1fr; }
+    .dashboard-wrapper { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "manajemensiswa",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radhiiiy/manajemenSiswa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/radhiiiy/manajemenSiswa/issues"
+  },
+  "homepage": "https://github.com/radhiiiy/manajemenSiswa#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mysql2": "^3.22.3"
+  }
+}
