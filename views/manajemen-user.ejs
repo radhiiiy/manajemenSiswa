@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Manajemen User</title>
     <link rel="stylesheet" href="/style.css">
+    <title>Manajemen User</title>
 </head>
 <body>
     <div class="dashboard-wrapper">
-        <!-- MEMANGGIL SIDEBAR YANG SAMA -->
         <%- include('partials/sidebar-operator') %>
-
-        <main class="content-area" style="background-color: #ffffff;">
+        <main class="content-area" style="background: white;">
             <header class="content-header"><h1>Manajemen User</h1></header>
-            <div class="dashboard-body">
-                <!-- Tabel akan dimasukkan ke sini -->
+            <div class="dashboard-body management-body">
+                <div class="tabs-container">
+                    <button class="tab-btn active" onclick="toggleTab('guru')">Daftar Guru</button>
+                    <button class="tab-btn" onclick="toggleTab('murid')">Daftar Murid</button>
+                </div>
+                <!-- Tabel Guru & Murid dengan Looping EJS -->
+                <div id="cont-guru">
+                    <table class="data-table">
+                        <% data_guru.forEach(g => { %>
+                            <tr><td><%= g.nama_lengkap %></td></tr>
+                        <% }) %>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
+    <script>
+        function toggleTab(type) { /* Logika ganti tab */ }
+    </script>
 </body>
 </html>

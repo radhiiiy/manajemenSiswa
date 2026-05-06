@@ -5,18 +5,14 @@ const path = require('path');
 
 const app = express();
 
-// Konfigurasi EJS sebagai Templating Engine
+// Konfigurasi EJS & Statis
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Mengatur folder 'public' untuk file statis (seperti CSS)
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 // Konfigurasi Session
 app.use(session({
-    secret: 'kunci-rahasia-sistem',
+    secret: 'rahasia-sistem-tugas',
     resave: false,
     saveUninitialized: true
 }));
@@ -31,71 +27,79 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
     if (err) throw err;
-    console.log('Database MySQL Terhubung!');
+    console.log('MySQL Connected...');
 });
 
-// ================= ROUTING HALAMAN ================= //
-
-app.get('/', (req, res) => {
-    res.render('index');
-});
-
-app.get('/login', (req, res) => {
-    const pesan = req.query.pesan || '';
-    res.render('login-guru', { pesan });
-});
-
-// Proses Login
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-    db.query('SELECT * FROM guru WHERE username = ? AND password = ?', [username, password], (err, results) => {
-        if (err) throw err;
-        if (results.length > 0) {
-            req.session.loggedin = true;
-            req.session.nama_lengkap = results[0].nama_lengkap;
-            req.session.role = results[0].role;
-            
-            if (results[0].role === 'operator') {
-                res.redirect('/dashboard-operator');
-            } else {
-                res.redirect('/dashboard-guru'); // Opsional jika kamu buat nanti
-            }
-        } else {
-            res.redirect('/login?pesan=gagal');
-        }
-    });
-});
-
-// Middleware Proteksi Akses Khusus Operator
-const cekOperator = (req, res, next) => {
-    if (!req.session.loggedin || req.session.role !== 'operator') {
-        return res.redirect('/login?pesan=belum_login');
-    }
+// Middleware Proteksi
+const cekSession = (req, res, next) => {
+    if (!req.session.loggedin) return res.redirect('/?pesan=belum_login');
     next();
 };
 
-// Routing Dashboard Operator (Dilindungi Middleware)
-app.get('/dashboard-operator', cekOperator, (req, res) => {
-    res.render('dashboard-operator', { 
-        nama_lengkap: req.session.nama_lengkap,
-        halaman_aktif: 'beranda' 
+// ================= ROUTING ================= //
+
+app.get('/', (req, res) => {
+    res.render('login', { pesan: req.query.pesan || '' });
+});
+
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Cek Guru/Operator
+    db.query('SELECT * FROM guru WHERE username = ? AND password = ?', [username, password], (err, resG) => {
+        if (resG.length > 0) {
+            req.session.loggedin = true;
+            req.session.nama_lengkap = resG[0].nama_lengkap;
+            req.session.role = resG[0].role;
+            return res.redirect(resG[0].role === 'operator' ? '/dashboard-operator' : '/dashboard-guru');
+        }
+        // Cek Siswa (Username = NISN)
+        db.query('SELECT * FROM murid WHERE nisn = ? AND password = ?', [username, password], (err, resM) => {
+            if (resM.length > 0) {
+                req.session.loggedin = true;
+                req.session.nama_lengkap = resM[0].nama_lengkap;
+                req.session.role = 'siswa';
+                return res.redirect('/dashboard-siswa');
+            }
+            res.redirect('/?pesan=gagal');
+        });
     });
 });
 
-// Routing Manajemen User (Dilindungi Middleware)
-app.get('/manajemen-user', cekOperator, (req, res) => {
-    res.render('manajemen-user', { 
-        nama_lengkap: req.session.nama_lengkap,
-        halaman_aktif: 'manajemen-user'
+app.get('/dashboard-operator', cekSession, (req, res) => {
+    if (req.session.role !== 'operator') return res.redirect('/');
+    db.query('SELECT COUNT(*) AS g FROM guru WHERE role="guru"', (e, rG) => {
+        db.query('SELECT COUNT(*) AS s FROM murid', (e, rS) => {
+            db.query('SELECT COUNT(*) AS k FROM kelas', (e, rK) => {
+                db.query('SELECT COUNT(*) AS t FROM tugas', (e, rT) => {
+                    res.render('dashboard-operator', {
+                        nama_lengkap: req.session.nama_lengkap,
+                        stats: { guru: rG[0].g, siswa: rS[0].s, kelas: rK[0].k, tugas: rT[0].t }
+                    });
+                });
+            });
+        });
     });
 });
 
-// Logout
+app.get('/dashboard-siswa', cekSession, (req, res) => {
+    if (req.session.role !== 'siswa') return res.redirect('/');
+    const namaSiswa = req.session.nama_lengkap;
+    db.query('SELECT id_kelas FROM murid WHERE nama_lengkap = ?', [namaSiswa], (err, resMurid) => {
+        const idKelas = resMurid[0].id_kelas;
+        db.query('SELECT COUNT(*) AS total FROM tugas WHERE id_kelas = ?', [idKelas], (err, resTotal) => {
+            res.render('dashboard-siswa', {
+                nama_lengkap: namaSiswa,
+                halaman_aktif: 'beranda',
+                stats: { total: resTotal[0].total, belum: 0, selesai: resTotal[0].total }
+            });
+        });
+    });
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
 
-app.listen(3000, () => {
-    console.log('Server berjalan di http://localhost:3000');
-});
+app.listen(3000, () => console.log('Server running: http://localhost:3000'));

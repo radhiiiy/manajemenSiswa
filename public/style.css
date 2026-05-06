@@ -16,7 +16,7 @@ body {
 }
 
 /* =========================================
-   2. STYLES HALAMAN INDEX (PILIH LOGIN)
+   2. HALAMAN INDEX (PILIHAN LOGIN)
    ========================================= */
 .header-main {
     background-color: #2b4f7a;
@@ -66,11 +66,18 @@ body {
     transform: scale(1.03);
 }
 
-.card-guru { background-color: #9cbdf8; color: #000000; }
-.card-siswa { background-color: #ffffff; color: #000000; }
+.card-guru { 
+    background-color: #9cbdf8; 
+    color: #000000; 
+}
+
+.card-siswa { 
+    background-color: #ffffff; 
+    color: #000000; 
+}
 
 /* =========================================
-   3. STYLES HALAMAN FORM LOGIN
+   3. HALAMAN LOGIN FORM
    ========================================= */
 .header-login {
     background-color: #35547a; 
@@ -103,7 +110,9 @@ body {
     margin-bottom: 40px;
 }
 
-.input-group { margin-bottom: 20px; }
+.input-group { 
+    margin-bottom: 20px; 
+}
 
 .input-group label {
     display: block;
@@ -122,7 +131,9 @@ body {
     transition: border-color 0.2s ease;
 }
 
-.input-group input:focus { border-color: #1461b6; }
+.input-group input:focus { 
+    border-color: #1461b6; 
+}
 
 .btn-masuk {
     width: 100%;
@@ -138,19 +149,19 @@ body {
     transition: background-color 0.2s ease;
 }
 
-.btn-masuk:hover { background-color: #0e4e94; }
-
+.btn-masuk:hover { 
+    background-color: #0e4e94; 
+}
 
 /* =========================================
-   4. STYLES DASHBOARD (UMUM & GURU)
+   4. DASHBOARD: LAYOUT UTAMA & SIDEBAR
    ========================================= */
 .dashboard-wrapper {
     display: flex;
     height: 100vh;
-    background-color: #f4f6f9; /* Latar belakang area konten */
+    background-color: #f4f6f9;
 }
 
-/* Sidebar Kiri */
 .sidebar {
     width: 260px;
     background-color: #35547a; 
@@ -175,10 +186,22 @@ body {
     align-items: center;
 }
 
-.profile-icon svg { width: 50px; color: white; }
-.profile-section h3 { font-size: 22px; font-weight: 600; letter-spacing: 1px; }
+.profile-icon svg { 
+    width: 50px; 
+    color: white; 
+}
 
-.sidebar-nav { flex: 1; padding-top: 20px; }
+.profile-section h3 { 
+    font-size: 22px; 
+    font-weight: 600; 
+    letter-spacing: 1px; 
+}
+
+.sidebar-nav { 
+    flex: 1; 
+    padding-top: 20px; 
+}
+
 .sidebar-nav a {
     display: block;
     color: white;
@@ -189,8 +212,14 @@ body {
     transition: background 0.2s;
 }
 
-.sidebar-nav a:hover { background-color: rgba(255, 255, 255, 0.1); }
-.sidebar-nav a.active { font-weight: bold; }
+.sidebar-nav a:hover { 
+    background-color: rgba(255, 255, 255, 0.1); 
+}
+
+.sidebar-nav a.active { 
+    font-weight: bold; 
+    background-color: rgba(255, 255, 255, 0.05); /* Highlight tipis untuk menu aktif */
+}
 
 .logout-btn {
     padding: 20px 30px;
@@ -200,7 +229,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Area Konten Utama Kanan */
 .content-area {
     flex: 1;
     display: flex;
@@ -214,11 +242,17 @@ body {
     padding: 20px 30px;
 }
 
-.content-header h1 { font-size: 24px; }
+.content-header h1 { 
+    font-size: 24px; 
+}
 
-.dashboard-body { padding: 30px; }
+.dashboard-body { 
+    padding: 30px; 
+}
 
-/* Grid Kartu Statistik 4 Kolom */
+/* =========================================
+   5. DASHBOARD: KARTU STATISTIK
+   ========================================= */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -231,7 +265,7 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    border-left: 8px solid transparent;
+    border-left: 8px solid transparent; /* Untuk variasi warna pinggir */
 }
 
 .stat-card .stat-title { 
@@ -247,19 +281,20 @@ body {
     color: #000; 
 }
 
-/* Warna border kiri pada masing-masing kartu (Guru) */
+/* Warna border kiri (Digunakan di Dashboard Guru) */
 .border-red { border-left-color: #ff4d4d; }
 .border-purple { border-left-color: #6c5ce7; }
 .border-yellow { border-left-color: #fdcb6e; }
 .border-green { border-left-color: #00b894; }
 
-/* Container Grafik Umum */
+/* =========================================
+   6. DASHBOARD: GRAFIK (GURU & OPERATOR)
+   ========================================= */
 .chart-container {
     background: white;
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    height: 400px;
 }
 
 .chart-title { 
@@ -268,8 +303,7 @@ body {
     color: #333; 
 }
 
-
-/* --- STYLES KHUSUS DASHBOARD OPERATOR --- */
+/* Grid Khusus Grafik Operator */
 .operator-charts-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -295,18 +329,283 @@ body {
     font-weight: 600;
 }
 
-/* Biar grafiknya tidak terlalu besar atau melebar */
 .chart-box canvas {
     max-width: 100%;
     height: auto !important;
     max-height: 250px; 
 }
 
-/* Responsif untuk HP dan Tablet */
-@media (max-width: 1024px) {
-    .operator-charts-grid { grid-template-columns: repeat(2, 1fr); }
+/* =========================================
+   7. HALAMAN: MANAJEMEN USER
+   ========================================= */
+.management-body {
+    background: white;
 }
 
+/* Tab Navigasi */
+.tabs-container {
+    display: flex;
+    border-bottom: 2px solid #eaeaea;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: #2b4f7a;
+}
+
+.tab-btn.active {
+    color: #000;
+    font-weight: 700;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #2b4f7a;
+    border-radius: 3px 3px 0 0;
+}
+
+/* Toolbar & Pencarian */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 8px 14px;
+    width: 300px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    margin-left: 10px;
+    font-size: 14px;
+    width: 100%;
+    color: #333;
+}
+
+.btn-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #35547a;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+    background-color: #284160;
+}
+
+/* Desain Tabel */
+.table-container {
+    background: #ffffff;
+    border-radius: 8px;
+    overflow-x: auto;
+    border: 1px solid #f0f0f0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #f4f4f4;
+    padding: 15px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    border-bottom: 2px solid #eaeaea;
+}
+
+.data-table td {
+    padding: 15px 20px;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px solid #eaeaea;
+}
+
+/* Tombol Aksi di Tabel (Edit & Hapus) */
+.action-cells {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-icon.edit:hover { color: #3498db; }
+.btn-icon.delete:hover { color: #e74c3c; }
+
+/* =========================================
+   8. RESPONSIVE DESIGN (Media Queries)
+   ========================================= */
+
+/* Tablet & Layar Menengah */
+@media (max-width: 1024px) {
+    .operator-charts-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+/* Mobile & Layar Kecil */
 @media (max-width: 768px) {
-    .operator-charts-grid { grid-template-columns: 1fr; }
+    .main-content { 
+        flex-direction: column; 
+    }
+    
+    .dashboard-wrapper { 
+        flex-direction: column; 
+    }
+    
+    .sidebar { 
+        width: 100%; 
+        height: auto; 
+    }
+    
+    .stats-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+    
+    .operator-charts-grid { 
+        grid-template-columns: 1fr; 
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   9. DESAIN FORM LOGIN BARU (SINGLE SIGN-ON)
+   ========================================= */
+.login-body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-header-blue {
+    height: 15vh;
+    background-color: #35547a; /* Warna biru sesuai desain */
+    width: 100%;
+}
+
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 8vh; /* Mengatur jarak dari blok biru */
+}
+
+.login-card-clean {
+    background: #ffffff;
+    width: 450px;
+    padding: 60px 50px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.08); /* Efek bayangan lembut */
+}
+
+.login-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 40px;
+}
+
+.input-clean {
+    margin-bottom: 25px;
+}
+
+.input-clean label {
+    display: block;
+    font-size: 15px;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.input-clean input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 1px solid #000000; /* Border hitam tegas sesuai desain */
+    border-radius: 6px;
+    outline: none;
+}
+
+.input-clean input:focus {
+    border-color: #1461b6;
+}
+
+.btn-masuk-clean {
+    width: 100%;
+    padding: 14px;
+    background-color: #1461b6;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-masuk-clean:hover {
+    background-color: #0d4a8f;
 }

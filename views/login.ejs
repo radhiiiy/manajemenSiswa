@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="/style.css">
+    <title>Login</title>
+</head>
+<body class="login-body">
+    <div class="login-header-blue"></div>
+    <div class="login-wrapper">
+        <div class="login-card-clean">
+            <h1 class="login-title">Login</h1>
+            <form action="/api/login" method="POST">
+                <div class="input-clean">
+                    <label>Username / NISN</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="input-clean">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-masuk-clean">Masuk</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
