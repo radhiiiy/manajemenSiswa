@@ -269,9 +269,7 @@ body {
 }
 
 
-/* =========================================
-   5. STYLES KHUSUS DASHBOARD OPERATOR
-   ========================================= */
+/* --- STYLES KHUSUS DASHBOARD OPERATOR --- */
 .operator-charts-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -282,29 +280,33 @@ body {
 .chart-box {
     background: #fdfdfd;
     border: 1px solid #eee;
-    padding: 15px;
-    border-radius: 6px;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .chart-box h4 {
     font-size: 14px;
     color: #555;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-align: center;
+    font-weight: 600;
 }
 
+/* Biar grafiknya tidak terlalu besar atau melebar */
+.chart-box canvas {
+    max-width: 100%;
+    height: auto !important;
+    max-height: 250px; 
+}
 
-/* =========================================
-   6. RESPONSIVE DESIGN (UNTUK HP)
-   ========================================= */
+/* Responsif untuk HP dan Tablet */
 @media (max-width: 1024px) {
     .operator-charts-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-    .main-content { flex-direction: column; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .operator-charts-grid { grid-template-columns: 1fr; }
-    .dashboard-wrapper { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; }
 }

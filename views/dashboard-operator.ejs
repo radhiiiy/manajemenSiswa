@@ -4,24 +4,119 @@
     <meta charset="UTF-8">
     <title>Dashboard Operator</title>
     <link rel="stylesheet" href="/style.css">
+    <!-- Memanggil library Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="dashboard-wrapper">
-        <!-- INI CARA MEMANGGIL SIDEBAR YANG TERPISAH -->
+        <!-- Memanggil Sidebar -->
         <%- include('partials/sidebar-operator') %>
 
         <main class="content-area">
-            <header class="content-header"><h1>Beranda</h1></header>
+            <header class="content-header">
+                <h1>Beranda</h1>
+            </header>
+
             <div class="dashboard-body">
+                <!-- Grid 4 Kartu Statistik -->
                 <div class="stats-grid">
-                    <div class="stat-card"><p class="stat-title">Total Guru</p><h2 class="stat-number">12</h2></div>
-                    <div class="stat-card"><p class="stat-title">Total Siswa</p><h2 class="stat-number">12</h2></div>
-                    <div class="stat-card"><p class="stat-title">Total Tugas</p><h2 class="stat-number">12</h2></div>
-                    <div class="stat-card"><p class="stat-title">Total Kelas</p><h2 class="stat-number">12</h2></div>
+                    <div class="stat-card">
+                        <p class="stat-title">Total Guru</p>
+                        <h2 class="stat-number">12</h2>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-title">Total Siswa</p>
+                        <h2 class="stat-number">12</h2>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-title">Total Tugas</p>
+                        <h2 class="stat-number">12</h2>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-title">Total Kelas</p>
+                        <h2 class="stat-number">12</h2>
+                    </div>
+                </div>
+
+                <!-- Area Grafik Operator -->
+                <div class="chart-container" style="height: auto;">
+                    <h3 class="chart-title">Statistik Keseluruhan</h3>
+                    
+                    <div class="operator-charts-grid">
+                        <!-- Chart 1: Tugas per Kelas -->
+                        <div class="chart-box">
+                            <h4>Jumlah Tugas per Kelas</h4>
+                            <canvas id="chartKelas"></canvas>
+                        </div>
+                        
+                        <!-- Chart 2: Tugas per Guru -->
+                        <div class="chart-box">
+                            <h4>Jumlah Tugas per Guru</h4>
+                            <canvas id="chartGuru"></canvas>
+                        </div>
+
+                        <!-- Chart 3: Persentase Selesai -->
+                        <div class="chart-box">
+                            <h4>Persentase Tugas Selesai</h4>
+                            <canvas id="chartSelesai"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- Script Render Grafik Menggunakan Chart.js -->
+    <script>
+        // 1. Grafik Bar: Jumlah Tugas per Kelas
+        new Chart(document.getElementById('chartKelas').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['X RPL', 'XI RPL', 'XII RPL', 'X TKJ', 'XI TKJ'],
+                datasets: [{
+                    label: 'Jumlah Tugas',
+                    data: [25, 30, 20, 15, 10],
+                    backgroundColor: '#3498db',
+                    borderRadius: 4
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // 2. Grafik Bar: Jumlah Tugas per Guru
+        new Chart(document.getElementById('chartGuru').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Pak Budi', 'Bu Ani', 'Pak Slamet', 'Bu Siti'],
+                datasets: [{
+                    label: 'Tugas Diberikan',
+                    data: [15, 20, 12, 8],
+                    backgroundColor: '#9b59b6',
+                    borderRadius: 4
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // 3. Grafik Doughnut: Persentase Tugas Selesai
+        new Chart(document.getElementById('chartSelesai').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Selesai (75%)', 'Belum Selesai (25%)'],
+                datasets: [{
+                    data: [75, 25],
+                    backgroundColor: ['#2ecc71', '#e74c3c'],
+                    hoverOffset: 4
+                }]
+            },
+            options: { 
+                responsive: true,
+                cutout: '65%', // Membuat lubang di tengah
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
