@@ -5,12 +5,14 @@ const path = require('path');
 
 const app = express();
 
-// Middleware untuk memproses data dari form HTML
+// Konfigurasi EJS sebagai Templating Engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Mengatur folder 'public' untuk file statis (seperti CSS)
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Mengatur folder saat ini sebagai tempat file statis (HTML, CSS, JS)
-app.use(express.static(__dirname));
 
 // Konfigurasi Session
 app.use(session({
@@ -19,7 +21,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// Koneksi ke Database MySQL (Pastikan MySQL di XAMPP menyala)
+// Koneksi Database
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -29,56 +31,71 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
     if (err) throw err;
-    console.log('Berhasil terhubung ke database MySQL');
+    console.log('Database MySQL Terhubung!');
 });
 
-// Endpoint Proses Login
+// ================= ROUTING HALAMAN ================= //
+
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+app.get('/login', (req, res) => {
+    const pesan = req.query.pesan || '';
+    res.render('login-guru', { pesan });
+});
+
+// Proses Login
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-    
     db.query('SELECT * FROM guru WHERE username = ? AND password = ?', [username, password], (err, results) => {
         if (err) throw err;
-        
         if (results.length > 0) {
-            const user = results[0];
-            // Simpan data ke session
             req.session.loggedin = true;
-            req.session.username = user.username;
-            req.session.nama_lengkap = user.nama_lengkap;
-            req.session.role = user.role;
-
-            // Arahkan sesuai hak akses
-            if (user.role === 'operator') {
-                res.redirect('/dashboard-operator.html');
+            req.session.nama_lengkap = results[0].nama_lengkap;
+            req.session.role = results[0].role;
+            
+            if (results[0].role === 'operator') {
+                res.redirect('/dashboard-operator');
             } else {
-                res.redirect('/dashboard-guru.html');
+                res.redirect('/dashboard-guru'); // Opsional jika kamu buat nanti
             }
         } else {
-            res.redirect('/login-guru.html?pesan=gagal');
+            res.redirect('/login?pesan=gagal');
         }
     });
 });
 
-// Endpoint untuk mengecek sesi (Digunakan oleh frontend HTML)
-app.get('/api/session', (req, res) => {
-    if (req.session.loggedin) {
-        res.json({ 
-            loggedin: true, 
-            nama_lengkap: req.session.nama_lengkap, 
-            role: req.session.role 
-        });
-    } else {
-        res.json({ loggedin: false });
+// Middleware Proteksi Akses Khusus Operator
+const cekOperator = (req, res, next) => {
+    if (!req.session.loggedin || req.session.role !== 'operator') {
+        return res.redirect('/login?pesan=belum_login');
     }
+    next();
+};
+
+// Routing Dashboard Operator (Dilindungi Middleware)
+app.get('/dashboard-operator', cekOperator, (req, res) => {
+    res.render('dashboard-operator', { 
+        nama_lengkap: req.session.nama_lengkap,
+        halaman_aktif: 'beranda' 
+    });
 });
 
-// Endpoint Logout
-app.get('/api/logout', (req, res) => {
+// Routing Manajemen User (Dilindungi Middleware)
+app.get('/manajemen-user', cekOperator, (req, res) => {
+    res.render('manajemen-user', { 
+        nama_lengkap: req.session.nama_lengkap,
+        halaman_aktif: 'manajemen-user'
+    });
+});
+
+// Logout
+app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.redirect('/index.html');
+    res.redirect('/');
 });
 
-// Jalankan Server
 app.listen(3000, () => {
     console.log('Server berjalan di http://localhost:3000');
 });

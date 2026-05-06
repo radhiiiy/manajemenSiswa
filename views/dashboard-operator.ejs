@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Operator</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- INI CARA MEMANGGIL SIDEBAR YANG TERPISAH -->
+        <%- include('partials/sidebar-operator') %>
+
+        <main class="content-area">
+            <header class="content-header"><h1>Beranda</h1></header>
+            <div class="dashboard-body">
+                <div class="stats-grid">
+                    <div class="stat-card"><p class="stat-title">Total Guru</p><h2 class="stat-number">12</h2></div>
+                    <div class="stat-card"><p class="stat-title">Total Siswa</p><h2 class="stat-number">12</h2></div>
+                    <div class="stat-card"><p class="stat-title">Total Tugas</p><h2 class="stat-number">12</h2></div>
+                    <div class="stat-card"><p class="stat-title">Total Kelas</p><h2 class="stat-number">12</h2></div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
