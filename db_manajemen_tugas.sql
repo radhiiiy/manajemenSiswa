@@ -21,19 +21,74 @@ USE `db_manajemen_tugas`;
 
 -- Dumping structure for table db_manajemen_tugas.guru
 CREATE TABLE IF NOT EXISTS `guru` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nama_lengkap` varchar(100) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `role` varchar(20) DEFAULT 'guru',
-  PRIMARY KEY (`id`),
+  `id_guru` varchar(10) NOT NULL,
+  `nama_lengkap` varchar(100) NOT NULL,
+  `mata_pelajaran` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('operator','guru') DEFAULT 'guru',
+  PRIMARY KEY (`id_guru`),
   UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table db_manajemen_tugas.guru: ~3 rows (approximately)
+INSERT INTO `guru` (`id_guru`, `nama_lengkap`, `mata_pelajaran`, `email`, `username`, `password`, `role`) VALUES
+	('G001', 'Dra. Sri Wahyuni', 'Biologi', 'sriw@school.ac.id', 'sri', '123', 'guru'),
+	('G002', 'Budi Santoso, M.Pd.', 'Bahasa Inggris', 'budis@school.ac.id', 'budi', '123', 'guru'),
+	('OP01', 'Admin Operator', '-', 'admin@school.ac.id', 'operator', 'admin123', 'operator');
+
+-- Dumping structure for table db_manajemen_tugas.kelas
+CREATE TABLE IF NOT EXISTS `kelas` (
+  `id_kelas` int NOT NULL AUTO_INCREMENT,
+  `nama_kelas` varchar(50) NOT NULL,
+  PRIMARY KEY (`id_kelas`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table db_manajemen_tugas.kelas: ~4 rows (approximately)
+INSERT INTO `kelas` (`id_kelas`, `nama_kelas`) VALUES
+	(1, 'X RPL 1'),
+	(2, 'XI RPL 2'),
+	(3, 'XII RPL 1'),
+	(4, 'X TKJ 2');
+
+-- Dumping structure for table db_manajemen_tugas.murid
+CREATE TABLE IF NOT EXISTS `murid` (
+  `nisn` varchar(20) NOT NULL,
+  `nama_lengkap` varchar(100) NOT NULL,
+  `id_kelas` int DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`nisn`),
+  KEY `id_kelas` (`id_kelas`),
+  CONSTRAINT `murid_ibfk_1` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table db_manajemen_tugas.murid: ~2 rows (approximately)
+INSERT INTO `murid` (`nisn`, `nama_lengkap`, `id_kelas`, `email`, `password`) VALUES
+	('0081234567', 'Ahmad Fathoni', 3, 'ahmad.f@student.ac.id', '123'),
+	('0087654321', 'Siti Nurhaliza', 4, 'siti.n@student.ac.id', '123');
+
+-- Dumping structure for table db_manajemen_tugas.tugas
+CREATE TABLE IF NOT EXISTS `tugas` (
+  `id_tugas` int NOT NULL AUTO_INCREMENT,
+  `judul_tugas` varchar(150) NOT NULL,
+  `deskripsi` text,
+  `id_guru` varchar(10) DEFAULT NULL,
+  `id_kelas` int DEFAULT NULL,
+  `tanggal_dibuat` date DEFAULT NULL,
+  `tenggat_waktu` date DEFAULT NULL,
+  PRIMARY KEY (`id_tugas`),
+  KEY `id_guru` (`id_guru`),
+  KEY `id_kelas` (`id_kelas`),
+  CONSTRAINT `tugas_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE,
+  CONSTRAINT `tugas_ibfk_2` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table db_manajemen_tugas.guru: ~2 rows (approximately)
-INSERT INTO `guru` (`id`, `nama_lengkap`, `username`, `password`, `role`) VALUES
-	(1, 'MR. Slamet', 'mr.slamet', '123', 'guru'),
-	(2, 'Operator Sekolah', 'operator', '123', 'operator');
+-- Dumping data for table db_manajemen_tugas.tugas: ~2 rows (approximately)
+INSERT INTO `tugas` (`id_tugas`, `judul_tugas`, `deskripsi`, `id_guru`, `id_kelas`, `tanggal_dibuat`, `tenggat_waktu`) VALUES
+	(1, 'Tugas Biologi Sel', 'Pelajari bab 2 dan kerjakan soal latihan', 'G001', 3, '2026-05-06', '2026-05-13'),
+	(2, 'Tugas Reading Comprehension', 'Baca teks bahasa Inggris di halaman 40', 'G002', 4, '2026-05-06', '2026-05-10');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
