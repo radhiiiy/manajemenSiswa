@@ -609,3 +609,97 @@ body {
 .btn-masuk-clean:hover {
     background-color: #0d4a8f;
 }
+
+/* =========================================
+   TAMBAHAN KHUSUS DASHBOARD SISWA (DS)
+   Agar tidak bentrok dengan class lama
+   ========================================= */
+
+.ds-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    background-color: #f4f6f9;
+}
+
+/* Sidebar khusus agar teks link tidak ungu */
+.sidebar-siswa {
+    width: 260px;
+    background-color: #35547a;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar-siswa a {
+    color: white !important; /* Paksa warna putih agar tidak ungu */
+    text-decoration: none;
+    padding: 15px 30px;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar-siswa a:hover, .sidebar-siswa a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+}
+
+/* Area Utama agar Konten di Tengah */
+.ds-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ds-body-center {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Tengah Horizontal */
+    align-items: center;     /* Tengah Vertikal */
+    padding: 40px;
+}
+
+/* Grid Kartu Baru */
+.ds-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+/* Style Kartu Baru (Lebih Besar & Modern) */
+.ds-card-box {
+    background: white;
+    padding: 60px 20px; /* Padding besar agar kotak tinggi */
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    text-align: center;
+    border-left: 10px solid; /* Warna samping */
+    transition: transform 0.3s;
+}
+
+.ds-card-box:hover {
+    transform: translateY(-10px);
+}
+
+.ds-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.ds-card-num {
+    font-size: 64px;
+    font-weight: 800;
+    color: #222;
+    margin: 0;
+}
+
+/* Warna Samping Kartu */
+.ds-purple { border-left-color: #6c5ce7; }
+.ds-red { border-left-color: #ff4d4d; }
+.ds-green { border-left-color: #00b894; }
