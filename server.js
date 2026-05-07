@@ -97,6 +97,39 @@ app.get('/dashboard-siswa', cekSession, (req, res) => {
     });
 });
 
+app.get('/daftar-tugas', (req, res) => {
+    if (!req.session.loggedin || req.session.role !== 'siswa') {
+        return res.redirect('/');
+    }
+
+    const namaSiswa = req.session.nama_lengkap;
+
+    // Perhatikan: sekarang menggunakan t.judul_tugas (sesuai database kamu)
+    const sql = `
+        SELECT 
+            t.id_tugas AS id, 
+            t.judul_tugas AS mapel, 
+            g.nama_lengkap AS guru,
+            'belum' AS status 
+        FROM tugas t
+        JOIN guru g ON t.id_guru = g.id_guru
+        JOIN murid m ON m.id_kelas = t.id_kelas
+        WHERE m.nama_lengkap = ?
+    `;
+
+    db.query(sql, [namaSiswa], (err, results) => {
+        if (err) {
+            console.error("Error Detail:", err.message);
+            return res.send("Terjadi kesalahan SQL: " + err.message);
+        }
+
+        res.render('daftar-tugas', {
+            nama_lengkap: namaSiswa,
+            tugas: results 
+        });
+    });
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');

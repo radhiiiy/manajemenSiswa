@@ -646,10 +646,12 @@ body {
 }
 
 /* Area Utama agar Konten di Tengah */
-.ds-main {
+.content-area, .ds-main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 100vh; /* Mengunci tinggi sesuai layar */
+    overflow: hidden; /* Mencegah seluruh halaman scroll (biar header tetap diam) */
 }
 
 .ds-body-center {
@@ -703,3 +705,110 @@ body {
 .ds-purple { border-left-color: #6c5ce7; }
 .ds-red { border-left-color: #ff4d4d; }
 .ds-green { border-left-color: #00b894; }
+
+/* =========================================
+   HALAMAN DAFTAR TUGAS (DT)
+   ========================================= */
+
+.dt-container {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    flex: 1; /* Mengisi sisa ruang */
+    overflow-y: auto; /* INI KUNCINYA: Membuat area ini bisa di-scroll ke bawah */
+    background-color: #f4f6f9; /* Warna latar belakang agar kontras */
+}
+
+/* Pastikan kartu tidak gepeng saat discroll */
+.dt-card {
+    background: white;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 40px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    flex-shrink: 0; /* Mencegah kartu mengecil/gepeng */
+}
+
+.dt-subject {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.dt-teacher {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.dt-avatar-circle {
+    width: 45px;
+    height: 45px;
+    background-color: #a0c4ff; /* Biru muda */
+    color: #2b4f7a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.dt-teacher p {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.dt-status-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.dt-icon-status {
+    width: 60px;
+    height: 60px;
+}
+
+/* Warna Icon Status */
+/* Warna Icon Status Centang (Selesai) */
+.status-done { 
+    color: #27ae60; /* Hijau yang lebih segar */
+} 
+
+/* Warna Icon Silang (Belum Selesai) */
+.status-pending { 
+    color: #eb4d4b; /* Merah yang tegas */
+}
+
+/* Pastikan SVG mengambil warna dari class di atas */
+.dt-icon-status svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor; /* Ini penting agar warna mengikuti class status-done/pending */
+}
+
+.dt-btn-detail {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 5px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.dt-btn-detail:hover {
+    background: #f0f0f0;
+}
