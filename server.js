@@ -545,6 +545,11 @@ app.get('/dashboard-siswa', cekSession, (req, res) => {
     });
 });
 
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
 app.listen(3000, () => console.log('Server running: http://localhost:3000'));
 
 app.get('/daftar-tugas-guru', cekSession, (req, res) => {

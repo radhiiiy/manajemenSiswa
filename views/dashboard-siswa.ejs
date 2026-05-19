@@ -1,15 +1,58 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Siswa</title>
-</head>
+    <link rel="stylesheet" href="/style.css"> </head>
 <body>
-    <div class="dashboard-wrapper">
-        <%- include('partials/sidebar-siswa') %>
-        <main class="content-area">
+
+    <div class="ds-wrapper">
+        <aside class="sidebar-siswa">
+            <div class="profile-section">
+                <div class="profile-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h3><%= nama_lengkap %></h3>
+            </div>
             
-        </main>
+            <nav class="sidebar-nav">
+                <a href="/dashboard-siswa" class="active">Beranda</a>
+                <a href="/daftar-tugas">Daftar Tugas</a>
+                <a href="/logout" style="margin-top: auto;">Keluar</a>
+            </nav>
+        </aside>
+
+        <div class="ds-main">
+            <header class="content-header">
+                <h1>Beranda</h1>
+            </header>
+
+            <div class="ds-body-center">
+                <div class="ds-grid">
+                    
+                    <div class="ds-card-box ds-purple">
+                        <span class="ds-card-title">Total Tugas</span>
+                        <h2 class="ds-card-num"><%= stats.total %></h2>
+                    </div>
+
+                    <div class="ds-card-box ds-red">
+                        <span class="ds-card-title">Tugas Belum Selesai</span>
+                        <h2 class="ds-card-num"><%= stats.belum %></h2>
+                    </div>
+
+                    <div class="ds-card-box ds-green">
+                        <span class="ds-card-title">Tugas Selesai</span>
+                        <h2 class="ds-card-num"><%= stats.selesai %></h2>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
 </body>
 </html>
