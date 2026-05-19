@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Tugas - Guru</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <%- include('partials/sidebar-guru') %>
+
+        <main class="content-area" style="background-color: #ffffff;">
+            <header class="content-header" style="background-color: #3f6aa5; padding: 20px 30px; color: white;">
+                <h1 style="margin: 0; font-size: 28px; font-weight: 600;">Tambah Tugas</h1>
+            </header>
+
+            <div class="dashboard-body" style="padding: 30px;">
+                <div style="max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e1e8ed;">
+                    <form action="/api/simpan-tugas" method="POST">
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748;">Judul Tugas</label>
+                            <input type="text" name="judul_tugas" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;" required placeholder="Masukkan judul tugas...">
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748;">Deskripsi Tugas</label>
+                            <textarea name="deskripsi" rows="4" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;" placeholder="Tulis instruksi tugas di sini..."></textarea>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748;">Tenggat Waktu</label>
+                            <input type="date" name="tenggat_waktu" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;" required>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #2d3748;">Pilih Kelas</label>
+                            <div style="display: flex; flex-direction: column; gap: 10px; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                <% if (locals.data_kelas && data_kelas.length > 0) { %>
+                                    <% data_kelas.forEach(kelas => { %>
+                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                            <input type="checkbox" name="id_kelas[]" value="<%= kelas.id_kelas %>" <%= locals.id_kelas_aktif && id_kelas_aktif == kelas.id_kelas ? 'checked' : '' %>>
+                                            <%= kelas.nama_kelas %>
+                                        </label>
+                                    <% }) %>
+                                <% } else { %>
+                                    <p style="color: #718096; margin: 0; font-style: italic;">Tidak ada kelas tersedia.</p>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" style="background-color: #2ecc71; color: white; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer;">Simpan Tugas</button>
+                            <a href="/daftar-tugas-guru" style="background-color: #94a3b8; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; text-align: center;">Batal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

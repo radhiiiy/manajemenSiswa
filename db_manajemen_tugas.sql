@@ -38,19 +38,36 @@ INSERT INTO `guru` (`id_guru`, `nama_lengkap`, `mata_pelajaran`, `email`, `usern
 	('G002', 'Budi Santoso, M.Pd.', 'Bahasa Inggris', 'budis@school.ac.id', 'budi', '123', 'guru'),
 	('OP01', 'Admin Operator', '-', 'admin@school.ac.id', 'operator', 'admin123', 'operator');
 
+-- Dumping structure for table db_manajemen_tugas.guru_kelas
+CREATE TABLE IF NOT EXISTS `guru_kelas` (
+  `id_guru_kelas` int NOT NULL AUTO_INCREMENT,
+  `id_guru` varchar(10) DEFAULT NULL,
+  `id_kelas` int DEFAULT NULL,
+  PRIMARY KEY (`id_guru_kelas`),
+  KEY `id_guru` (`id_guru`),
+  KEY `id_kelas` (`id_kelas`),
+  CONSTRAINT `guru_kelas_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `guru_kelas_ibfk_2` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table db_manajemen_tugas.guru_kelas: ~0 rows (approximately)
+
 -- Dumping structure for table db_manajemen_tugas.kelas
 CREATE TABLE IF NOT EXISTS `kelas` (
   `id_kelas` int NOT NULL AUTO_INCREMENT,
   `nama_kelas` varchar(50) NOT NULL,
-  PRIMARY KEY (`id_kelas`)
+  `wali_kelas` varchar(100) DEFAULT NULL,
+  `id_wali_guru` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id_kelas`),
+  KEY `fk_wali_kelas` (`id_wali_guru`),
+  CONSTRAINT `fk_wali_kelas` FOREIGN KEY (`id_wali_guru`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table db_manajemen_tugas.kelas: ~4 rows (approximately)
-INSERT INTO `kelas` (`id_kelas`, `nama_kelas`) VALUES
-	(1, 'X RPL 1'),
-	(2, 'XI RPL 2'),
-	(3, 'XII RPL 1'),
-	(4, 'X TKJ 2');
+-- Dumping data for table db_manajemen_tugas.kelas: ~3 rows (approximately)
+INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `wali_kelas`, `id_wali_guru`) VALUES
+	(1, 'XI RPL 2', 'Budi Santoso, M.Pd.', NULL),
+	(3, 'XII RPL 1', NULL, NULL),
+	(4, 'X TKJ 2', NULL, NULL);
 
 -- Dumping structure for table db_manajemen_tugas.murid
 CREATE TABLE IF NOT EXISTS `murid` (

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Tugas - <%= nama_kelas %></title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <%- include('partials/sidebar-guru') %>
+
+        <main class="content-area">
+            <header class="content-header" style="background-color: #3f6aa5; padding: 20px 30px; color: white;">
+                <h1 style="margin: 0; font-size: 28px; font-weight: 600;">Daftar Tugas</h1>
+            </header>
+
+            <div class="dashboard-body" style="padding: 30px; background-color: #ffffff;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; color: #000000; font-size: 24px; font-weight: 700;">Daftar Kelas (<%= nama_kelas %>)</h2>
+                    <a href="/daftar-tugas-guru" style="background-color: #94a3b8; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">&larr; Kembali</a>
+                </div>
+
+                <div class="management-card">
+                    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 22px; font-weight: 700; color: #000;">Daftar Tugas</h3>
+                    
+                    <div class="filter-wrapper">
+                        <input type="text" id="searchTask" class="search-input" placeholder="Cari Tugas atau Siswa" onkeyup="filterTabel()">
+                        <select id="statusFilter" class="filter-select" onchange="filterTabel()">
+                            <option value="">Semua Status</option>
+                            <option value="Selesai">Selesai</option>
+                            <option value="Belum Selesai">Belum Selesai</option>
+                        </select>
+                    </div>
+
+                    <table class="task-table" id="tabelUtamaTugas">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No</th>
+                                <th>Tugas</th>
+                                <th>Siswa</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th style="text-align: center; width: 300px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (!locals.data_gabungan || data_gabungan.length === 0) { %>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #999; padding: 30px; font-style: italic;">
+                                        Belum ada data tugas atau siswa untuk kelas ini.
+                                    </td>
+                                </tr>
+                            <% } else { %>
+                                <% data_gabungan.forEach((item, index) => { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td style="font-weight: 600;"><%= item.judul_tugas %></td>
+                                        <td><%= item.nama_siswa || 'Tidak ada siswa' %></td>
+                                        <td><%= item.tenggat_waktu %></td>
+                                        <td>
+                                            <span class="status-<%= item.status_tugas === 'Selesai' ? 'selesai' : 'belum' %>" style="font-weight: bold;">
+                                                <%= item.status_tugas || 'Belum Selesai' %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-action-wrapper">
+                                                <button class="btn-action btn-blue" onclick="bukaModalEdit('<%= item.id_tugas %>', '<%= item.judul_tugas %>', '<%= item.tanggal_raw %>')">✏️ Edit</button>
+                                                
+                                                <button class="btn-action btn-red" onclick="hapusTugas('<%= item.id_tugas %>')">❌ Hapus</button>
+                                                
+                                                <% if (item.status_tugas !== 'Selesai') { %>
+                                                    <a href="/api/ubah-status-tugas/<%= item.id_tugas %>?id_kelas=<%= id_kelas %>" class="btn-action btn-green">✔️ Tandai selesai</a>
+                                                <% } else { %>
+                                                    <button class="btn-action btn-disabled" disabled>✔️ Selesai</button>
+                                                <% } %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modalEdit" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">Edit Data Tugas</h3>
+            <form action="/api/edit-tugas" method="POST">
+                <input type="hidden" name="id_tugas" id="edit_id_tugas">
+                <input type="hidden" name="id_kelas" value="<%= id_kelas %>">
+                
+                <div class="form-group">
+                    <label>Judul Tugas</label>
+                    <input type="text" name="judul_tugas" id="edit_judul_tugas" required>
+                </div>
+                <div class="form-group">
+                    <label>Tenggat Waktu (Deadline)</label>
+                    <input type="date" name="tenggat_waktu" id="edit_tenggat_waktu" required>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" onclick="tutupModalEdit()" style="padding: 8px 15px; background:#94a3b8; color:white; border:none; border-radius:4px; cursor:pointer;">Batal</button>
+                    <button type="submit" style="padding: 8px 15px; background:#2ecc71; color:white; border:none; border-radius:4px; cursor:pointer;">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Logika Live Search & Filter Status
+        function filterTabel() {
+            let input = document.getElementById("searchTask").value.toUpperCase();
+            let select = document.getElementById("statusFilter").value.toUpperCase();
+            let table = document.getElementById("tabelUtamaTugas");
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let tdTugas = tr[i].getElementsByTagName("td")[1];
+                let tdSiswa = tr[i].getElementsByTagName("td")[2];
+                let tdStatus = tr[i].getElementsByTagName("td")[4];
+
+                if (tdTugas && tdSiswa && tdStatus) {
+                    let txtTugas = tdTugas.textContent || tdTugas.innerText;
+                    let txtSiswa = tdSiswa.textContent || tdSiswa.innerText;
+                    let txtStatus = tdStatus.textContent || tdStatus.innerText;
+
+                    let cocokData = (txtTugas.toUpperCase().indexOf(input) > -1 || txtSiswa.toUpperCase().indexOf(input) > -1);
+                    let cocokStatus = (select === "" || txtStatus.toUpperCase().trim() === select);
+
+                    if (cocokData && cocokStatus) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function hapusTugas(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus tugas ini secara permanen dari database?')) {
+                window.location.href = `/api/hapus-tugas/${id}?id_kelas=<%= id_kelas %>`;
+            }
+        }
+
+        // Fungsi Kontrol Modal Pop-up Edit
+        function bukaModalEdit(id, judul, tanggal) {
+            document.getElementById('edit_id_tugas').value = id;
+            document.getElementById('edit_judul_tugas').value = judul;
+            document.getElementById('edit_tenggat_waktu').value = tanggal;
+            document.getElementById('modalEdit').style.display = 'flex';
+        }
+
+        function tutupModalEdit() {
+            document.getElementById('modalEdit').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

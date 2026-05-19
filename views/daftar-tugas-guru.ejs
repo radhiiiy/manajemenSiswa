@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Kelas - Manajemen Tugas</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <%- include('partials/sidebar-guru') %>
+
+        <main class="content-area">
+            <header class="content-header" style="background-color: #3f6aa5; padding: 20px 30px; color: white;">
+                <h1 style="margin: 0; font-size: 28px; font-weight: 600;">Daftar Tugas</h1>
+            </header>
+
+            <div class="dashboard-body" style="padding: 30px; background-color: #ffffff;">
+                <h2 style="margin-top: 0; margin-bottom: 25px; color: #000000; font-size: 24px; font-weight: 700;">Daftar Kelas</h2>
+                
+                <div class="kelas-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                    <% if (locals.data_kelas && data_kelas.length > 0) { %>
+                        <% data_kelas.forEach(kelas => { %>
+                        <div class="kelas-card" style="background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; overflow: hidden; border: 1px solid #e1e8ed; height: 120px;">
+                            <div class="card-accent" style="width: 8px; background-color: #74512D;"></div>
+                            <div class="card-content" style="padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div style="margin: 0;">
+                                    <h3 style="margin: 0 0 5px 0; font-size: 18px; color: #2c3e50;"><%= kelas.nama_kelas %></h3>
+                                    <p style="margin: 0; font-size: 13px; color: #7f8c8d;"><%= kelas.jumlah_siswa || 0 %> Siswa</p>
+                                </div>
+                                <a href="/tugas-kelas/<%= kelas.id_kelas %>" class="btn-pilih" style="align-self: flex-start; background-color: #74512D; color: white; text-decoration: none; padding: 6px 15px; border-radius: 6px; font-size: 13px; font-weight: 600;">Pilih Kelas</a>
+                            </div>
+                        </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p style="color: #666; font-style: italic;">Belum ada kelas yang ditugaskan untuk Anda.</p>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

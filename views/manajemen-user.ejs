@@ -1,32 +1,338 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen User - Dashboard Operator</title>
     <link rel="stylesheet" href="/style.css">
-    <title>Manajemen User</title>
 </head>
+
 <body>
+
     <div class="dashboard-wrapper">
         <%- include('partials/sidebar-operator') %>
-        <main class="content-area" style="background: white;">
-            <header class="content-header"><h1>Manajemen User</h1></header>
-            <div class="dashboard-body management-body">
-                <div class="tabs-container">
-                    <button class="tab-btn active" onclick="toggleTab('guru')">Daftar Guru</button>
-                    <button class="tab-btn" onclick="toggleTab('murid')">Daftar Murid</button>
-                </div>
-                <!-- Tabel Guru & Murid dengan Looping EJS -->
-                <div id="cont-guru">
-                    <table class="data-table">
-                        <% data_guru.forEach(g => { %>
-                            <tr><td><%= g.nama_lengkap %></td></tr>
-                        <% }) %>
-                    </table>
-                </div>
-            </div>
-        </main>
+
+            <main class="content-area" style="background-color: #ffffff;">
+                <header class="content-header">
+                    <h1>Manajemen User</h1>
+                </header>
+
+                <% if (typeof pesan !=='undefined' && pesan==='hapus_berhasil' ) { %>
+                    <div
+                        style="background: #ff7675; color: white; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
+                        Data berhasil dihapus dari sistem!
+                    </div>
+                    <% } %>
+
+                        <div class="dashboard-body management-body">
+
+                            <div class="tabs-container">
+                                <button class="tab-btn active" id="tab-btn-guru" onclick="openTab('guru')">Daftar Guru</button>
+                                <button class="tab-btn" id="tab-btn-murid" onclick="openTab('murid')">Daftar Murid</button>
+                            </div>
+
+                            <div class="toolbar">
+                                <div class="search-box">
+                                    <input type="text" id="input-cari" placeholder="Cari Guru..." onkeyup="cariData()">
+                                </div>
+
+                                <button class="btn-add" onclick="showModalTambah()">
+                                    <span id="teks-tombol-tambah">+ Tambah Guru</span>
+                                </button>
+                            </div>
+
+                            <div class="table-container" id="container-guru">
+                                <table class="data-table" id="tabel-guru">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Guru</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Mata Pelajaran</th>
+                                            <th>Email</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% data_guru.forEach(guru=> { %>
+                                            <tr>
+                                                <td><span class="badge-id">
+                                                        <%= guru.id_guru %>
+                                                    </span></td>
+                                                <td>
+                                                    <%= guru.nama_lengkap %>
+                                                </td>
+                                                <td>
+                                                    <%= guru.mata_pelajaran %>
+                                                </td>
+                                                <td>
+                                                    <%= guru.email %>
+                                                </td>
+                                                <td class="action-cells">
+                                                    <button class="btn-edit"
+                                                        onclick="openEditGuru('<%= guru.id_guru %>')">Edit</button>
+                                                    <button class="btn-hapus"
+                                                        onclick="konfirmasiHapus('<%= guru.id_guru %>', 'guru')">Hapus</button>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="table-container" id="container-murid" style="display: none;">
+                                <table class="data-table" id="tabel-murid">
+                                    <thead>
+                                        <tr>
+                                            <th>NISN</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Kelas</th>
+                                            <th>Email</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% data_murid.forEach(murid=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= murid.nisn %>
+                                                </td>
+                                                <td>
+                                                    <%= murid.nama_lengkap %>
+                                                </td>
+                                                <td>
+                                                    <%= murid.nama_kelas %>
+                                                </td>
+                                                <td>
+                                                    <%= murid.email %>
+                                                </td>
+                                                <td class="action-cells">
+                                                    <button class="btn-edit"
+                                                        onclick="openEditMurid('<%= murid.nisn %>')">Edit</button>
+                                                    <button class="btn-hapus"
+                                                        onclick="konfirmasiHapus('<%= murid.nisn %>', 'murid')">Hapus</button>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+            </main>
     </div>
+
+    <div id="modalGuru" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modalGuru')">&times;</span>
+            <h2>Tambah Guru Baru</h2>
+            <hr>
+            <form action="/api/tambah-guru" method="POST">
+                <div class="form-grid">
+                    <div class="form-group"><label>ID Guru (NIP)</label><input type="text" name="id_guru" required></div>
+                    <div class="form-group"><label>Nama Lengkap</label><input type="text" name="nama" required></div>
+                    <div class="form-group"><label>Username</label><input type="text" name="username" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" name="password" required></div>
+                </div>
+                <div class="form-group"><label>Mata Pelajaran</label><input type="text" name="mapel" required></div>
+                <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+                
+                <div class="form-group">
+                    <label>Wali Kelas Dari:</label>
+                    <select name="id_kelas_wali">
+                        <option value="">-- Bukan Wali Kelas --</option>
+                        <% data_kelas.forEach(k=> { %>
+                            <option value="<%= k.id_kelas %>"><%= k.nama_kelas %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Mengajar di Kelas (Bisa pilih banyak):</label>
+                    <div class="checkbox-grid">
+                        <% data_kelas.forEach(k=> { %>
+                            <label class="check-item">
+                                <input type="checkbox" name="kelas_ajar" value="<%= k.id_kelas %>"> <%= k.nama_kelas %>
+                            </label>
+                        <% }) %>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save">Simpan Guru</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalEditGuru" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modalEditGuru')">&times;</span>
+            <h2>Edit Data Guru</h2>
+            <hr>
+            <form action="/api/update-guru" method="POST">
+                <input type="hidden" name="id_guru" id="edit-guru-id">
+                <div class="form-group"><label>Nama Lengkap</label><input type="text" name="nama" id="edit-guru-nama" required></div>
+                <div class="form-group"><label>Mata Pelajaran</label><input type="text" name="mapel" id="edit-guru-mapel" required></div>
+                <div class="form-group"><label>Email</label><input type="email" name="email" id="edit-guru-email" required></div>
+                
+                <div class="form-group">
+                    <label>Wali Kelas:</label>
+                    <select name="id_kelas_wali" id="edit-guru-wali">
+                        <option value="">-- Bukan Wali Kelas --</option>
+                        <% data_kelas.forEach(k=> { %>
+                            <option value="<%= k.id_kelas %>"><%= k.nama_kelas %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Mengajar di Kelas (Bisa pilih banyak):</label>
+                    <div class="checkbox-grid">
+                        <% data_kelas.forEach(k=> { %>
+                            <label class="check-item">
+                                <input type="checkbox" name="kelas_ajar" class="edit-guru-kelas-ajar" value="<%= k.id_kelas %>"> <%= k.nama_kelas %>
+                            </label>
+                        <% }) %>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save" style="background: #3498db;">Simpan Perubahan</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalMurid" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modalMurid')">&times;</span>
+            <h2>Tambah Murid Baru</h2>
+            <hr>
+            <form action="/api/tambah-murid" method="POST">
+                <div class="form-group"><label>NISN</label><input type="text" name="nisn" required></div>
+                <div class="form-group"><label>Nama Lengkap</label><input type="text" name="nama" required></div>
+                <div class="form-group">
+                    <label>Kelas</label>
+                    <select name="id_kelas" required>
+                        <% data_kelas.forEach(k=> { %><option value="<%= k.id_kelas %>">
+                                <%= k.nama_kelas %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+                <div class="form-group"><label>Email Student</label><input type="email" name="email" required></div>
+                <div class="form-group"><label>Password</label><input type="password" name="password" required></div>
+                <button type="submit" class="btn-save">Simpan Murid</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalEditMurid" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modalEditMurid')">&times;</span>
+            <h2>Edit Data Murid</h2>
+            <hr>
+            <form action="/api/update-murid" method="POST">
+                <input type="hidden" name="nisn" id="edit-murid-nisn">
+                <div class="form-group"><label>Nama Lengkap</label><input type="text" name="nama" id="edit-murid-nama" required></div>
+                <div class="form-group">
+                    <label>Kelas</label>
+                    <select name="id_kelas" id="edit-murid-kelas">
+                        <% data_kelas.forEach(k=> { %><option value="<%= k.id_kelas %>">
+                                <%= k.nama_kelas %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </div>
+                <div class="form-group"><label>Email</label><input type="email" name="email" id="edit-murid-email" required></div>
+                <button type="submit" class="btn-save" style="background: #3498db;">Simpan Perubahan</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        function toggleTab(type) { /* Logika ganti tab */ }
+        let tabAktif = 'guru';
+
+        function openTab(type) {
+            tabAktif = type;
+            document.getElementById('container-guru').style.display = type === 'guru' ? 'block' : 'none';
+            document.getElementById('container-murid').style.display = type === 'murid' ? 'block' : 'none';
+            document.getElementById('tab-btn-guru').classList.toggle('active', type === 'guru');
+            document.getElementById('tab-btn-murid').classList.toggle('active', type === 'murid');
+            document.getElementById('teks-tombol-tambah').innerText = type === 'guru' ? '+ Tambah Guru' : '+ Tambah Murid';
+            document.getElementById('input-cari').placeholder = type === 'guru' ? 'Cari Guru...' : 'Cari Murid...';
+        }
+
+        function showModalTambah() {
+            const id = tabAktif === 'guru' ? 'modalGuru' : 'modalMurid';
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // --- FETCH DATA UNTUK EDIT ---
+        function openEditGuru(id) {
+            fetch(`/api/get-guru/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('edit-guru-id').value = data.guru.id_guru;
+                    document.getElementById('edit-guru-nama').value = data.guru.nama_lengkap;
+                    document.getElementById('edit-guru-mapel').value = data.guru.mata_pelajaran;
+                    document.getElementById('edit-guru-email').value = data.guru.email;
+                    document.getElementById('edit-guru-wali').value = data.wali_kelas || "";
+
+                    // Reset semua checkbox kelas ajar terlebih dahulu
+                    const checkboxes = document.querySelectorAll('.edit-guru-kelas-ajar');
+                    checkboxes.forEach(cb => cb.checked = false);
+
+                    // Centang otomatis kelas yang diajar berdasarkan data dari server
+                    if (data.kelas_ajar && data.kelas_ajar.length > 0) {
+                        checkboxes.forEach(cb => {
+                            // Konversi ke integer/string untuk mencocokkan id_kelas
+                            if (data.kelas_ajar.includes(parseInt(cb.value))) {
+                                cb.checked = true;
+                            }
+                        });
+                    }
+
+                    document.getElementById('modalEditGuru').style.display = 'flex';
+                });
+        }
+
+        function openEditMurid(nisn) {
+            fetch(`/api/get-murid/${nisn}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('edit-murid-nisn').value = data.nisn;
+                    document.getElementById('edit-murid-nama').value = data.nama_lengkap;
+                    document.getElementById('edit-murid-kelas').value = data.id_kelas;
+                    document.getElementById('edit-murid-email').value = data.email;
+                    document.getElementById('modalEditMurid').style.display = 'flex';
+                });
+        }
+
+        // --- FITUR CARI SEDERHANA ---
+        function cariData() {
+            let input = document.getElementById("input-cari").value.toUpperCase();
+            let tabelId = tabAktif === 'guru' ? "tabel-guru" : "tabel-murid";
+            let tr = document.getElementById(tabelId).getElementsByTagName("tr");
+            for (let i = 1; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[1]; // Nama Lengkap
+                if (td) {
+                    let txtValue = td.textContent || td.innerText;
+                    tr[i].style.display = txtValue.toUpperCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        function konfirmasiHapus(id, tipe) {
+            const teks = tipe === 'guru' ? `Apakah Anda yakin ingin menghapus guru dengan ID: ${id}?` : `Apakah Anda yakin ingin menghapus murid dengan NISN: ${id}?`;
+
+            if (confirm(teks)) {
+                if (tipe === 'guru') {
+                    window.location.href = '/api/hapus-guru/' + id;
+                } else {
+                    window.location.href = '/api/hapus-murid/' + id;
+                }
+            }
+        }
     </script>
 </body>
+
 </html>
