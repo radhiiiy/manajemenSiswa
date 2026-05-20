@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `guru` (
 INSERT INTO `guru` (`id_guru`, `nama_lengkap`, `mata_pelajaran`, `email`, `username`, `password`, `role`) VALUES
 	('G001', 'Dra. Sri Wahyuni', 'Biologi', 'sriw@school.ac.id', 'sri', '123', 'guru'),
 	('G002', 'Budi Santoso, M.Pd.', 'Bahasa Inggris', 'budis@school.ac.id', 'budi', '123', 'guru'),
+	('G005', 'firman', 'game', 'r@gmail.com', 'firman', '123', 'guru'),
 	('OP01', 'Admin Operator', '-', 'admin@school.ac.id', 'operator', 'admin123', 'operator');
 
 -- Dumping structure for table db_manajemen_tugas.guru_kelas
@@ -50,12 +51,13 @@ CREATE TABLE IF NOT EXISTS `guru_kelas` (
   CONSTRAINT `guru_kelas_ibfk_2` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table db_manajemen_tugas.guru_kelas: ~0 rows (approximately)
+-- Dumping data for table db_manajemen_tugas.guru_kelas: ~4 rows (approximately)
 INSERT INTO `guru_kelas` (`id_guru_kelas`, `id_guru`, `id_kelas`) VALUES
 	(9, 'G001', 1),
 	(10, 'G001', 3),
 	(11, 'G002', 3),
-	(12, 'G002', 4);
+	(12, 'G002', 4),
+	(19, 'G005', 1);
 
 -- Dumping structure for table db_manajemen_tugas.kelas
 CREATE TABLE IF NOT EXISTS `kelas` (
@@ -70,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `kelas` (
 
 -- Dumping data for table db_manajemen_tugas.kelas: ~3 rows (approximately)
 INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `wali_kelas`, `id_wali_guru`) VALUES
-	(1, 'XI RPL 2', 'Budi Santoso, M.Pd.', 'G001'),
+	(1, 'XI RPL 2', 'Budi Santoso, M.Pd.', NULL),
 	(3, 'XII RPL 1', NULL, 'G002'),
 	(4, 'X TKJ 2', NULL, NULL);
 
@@ -89,7 +91,8 @@ CREATE TABLE IF NOT EXISTS `murid` (
 -- Dumping data for table db_manajemen_tugas.murid: ~2 rows (approximately)
 INSERT INTO `murid` (`nisn`, `nama_lengkap`, `id_kelas`, `email`, `password`) VALUES
 	('0081234567', 'Ahmad Fathoni', 3, 'ahmad.f@student.ac.id', '123'),
-	('0087654321', 'Siti Nurhaliza', 4, 'siti.n@student.ac.id', '123');
+	('0087654321', 'Siti Nurhaliza', 4, 'siti.n@student.ac.id', '123'),
+	('123', 'radhi', 1, 'radhiyyan232@gmail.com', '123');
 
 -- Dumping structure for table db_manajemen_tugas.tugas
 CREATE TABLE IF NOT EXISTS `tugas` (
@@ -108,9 +111,10 @@ CREATE TABLE IF NOT EXISTS `tugas` (
   CONSTRAINT `tugas_ibfk_2` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table db_manajemen_tugas.tugas: ~2 rows (approximately)
+-- Dumping data for table db_manajemen_tugas.tugas: ~1 rows (approximately)
 INSERT INTO `tugas` (`id_tugas`, `judul_tugas`, `deskripsi`, `id_guru`, `id_kelas`, `tanggal_dibuat`, `tenggat_waktu`, `status`) VALUES
-	(2, 'Tugas Reading Comprehension', 'Baca teks bahasa Inggris di halaman 40', 'G002', 4, '2026-05-06', '2026-05-10', 'Selesai');
+	(2, 'Tugas Reading Comprehension', 'Baca teks bahasa Inggris di halaman 40', 'G002', 4, '2026-05-06', '2026-05-10', 'Selesai'),
+	(3, 'game', 'coding', 'G005', 1, '2026-05-20', '2026-05-21', 'Selesai');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
