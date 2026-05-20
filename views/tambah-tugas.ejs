@@ -40,7 +40,7 @@
                                 <% if (locals.data_kelas && data_kelas.length > 0) { %>
                                     <% data_kelas.forEach(kelas => { %>
                                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                            <input type="checkbox" name="id_kelas[]" value="<%= kelas.id_kelas %>" <%= locals.id_kelas_aktif && id_kelas_aktif == kelas.id_kelas ? 'checked' : '' %>>
+                                            <input type="checkbox" name="kelas_tujuan" value="<%= kelas.id_kelas %>">
                                             <%= kelas.nama_kelas %>
                                         </label>
                                     <% }) %>

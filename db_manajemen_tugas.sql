@@ -48,9 +48,14 @@ CREATE TABLE IF NOT EXISTS `guru_kelas` (
   KEY `id_kelas` (`id_kelas`),
   CONSTRAINT `guru_kelas_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `guru_kelas_ibfk_2` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table db_manajemen_tugas.guru_kelas: ~0 rows (approximately)
+INSERT INTO `guru_kelas` (`id_guru_kelas`, `id_guru`, `id_kelas`) VALUES
+	(9, 'G001', 1),
+	(10, 'G001', 3),
+	(11, 'G002', 3),
+	(12, 'G002', 4);
 
 -- Dumping structure for table db_manajemen_tugas.kelas
 CREATE TABLE IF NOT EXISTS `kelas` (
@@ -65,8 +70,8 @@ CREATE TABLE IF NOT EXISTS `kelas` (
 
 -- Dumping data for table db_manajemen_tugas.kelas: ~3 rows (approximately)
 INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `wali_kelas`, `id_wali_guru`) VALUES
-	(1, 'XI RPL 2', 'Budi Santoso, M.Pd.', NULL),
-	(3, 'XII RPL 1', NULL, NULL),
+	(1, 'XI RPL 2', 'Budi Santoso, M.Pd.', 'G001'),
+	(3, 'XII RPL 1', NULL, 'G002'),
 	(4, 'X TKJ 2', NULL, NULL);
 
 -- Dumping structure for table db_manajemen_tugas.murid
@@ -95,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `tugas` (
   `id_kelas` int DEFAULT NULL,
   `tanggal_dibuat` date DEFAULT NULL,
   `tenggat_waktu` date DEFAULT NULL,
+  `status` varchar(20) DEFAULT 'Belum Selesai',
   PRIMARY KEY (`id_tugas`),
   KEY `id_guru` (`id_guru`),
   KEY `id_kelas` (`id_kelas`),
@@ -103,9 +109,8 @@ CREATE TABLE IF NOT EXISTS `tugas` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table db_manajemen_tugas.tugas: ~2 rows (approximately)
-INSERT INTO `tugas` (`id_tugas`, `judul_tugas`, `deskripsi`, `id_guru`, `id_kelas`, `tanggal_dibuat`, `tenggat_waktu`) VALUES
-	(1, 'Tugas Biologi Sel', 'Pelajari bab 2 dan kerjakan soal latihan', 'G001', 3, '2026-05-06', '2026-05-13'),
-	(2, 'Tugas Reading Comprehension', 'Baca teks bahasa Inggris di halaman 40', 'G002', 4, '2026-05-06', '2026-05-10');
+INSERT INTO `tugas` (`id_tugas`, `judul_tugas`, `deskripsi`, `id_guru`, `id_kelas`, `tanggal_dibuat`, `tenggat_waktu`, `status`) VALUES
+	(2, 'Tugas Reading Comprehension', 'Baca teks bahasa Inggris di halaman 40', 'G002', 4, '2026-05-06', '2026-05-10', 'Selesai');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

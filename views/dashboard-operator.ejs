@@ -1,34 +1,256 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>Dashboard</title>
+    <title>Dashboard Operator</title>
+    <style>
+        /* ==================== LAYOUT SATU LAYAR FULL ==================== */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Kunci scroll halaman utama di desktop */
+            background-color: #f8fafc;
+            font-family: sans-serif;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .content-header {
+            background-color: #3f6aa5;
+            padding: 15px 30px;
+            color: white;
+            height: 60px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .dashboard-body {
+            flex: 1;
+            padding: 20px 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: calc(100vh - 60px);
+            overflow-y: auto; /* Aktifkan scroll internal jika layar vertikal terlalu pendek */
+        }
+
+        /* 1. Grid Empat Kotak Statistik Utama */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            border: 1px solid #f1f3f5;
+        }
+        .stat-card p {
+            margin: 0 0 4px 0;
+            color: #64748b;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .stat-card h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #1e293b;
+            font-weight: 800;
+        }
+
+        /* 2. Container Grafik Tren (Mengisi Sisa Ruang Layar Desktop) */
+        .chart-container {
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            min-height: 250px;
+        }
+
+        .operator-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 Grafik berjajar horizontal */
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #f1f3f5;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chart-box h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .canvas-wrapper {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ==================== BREAKPOINT RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .operator-charts-grid {
+                grid-template-columns: 1fr; /* Grafik bertumpuk vertikal di tablet/HP */
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr); /* Kotak statistik jadi 2 baris */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html, body {
+                overflow: auto; /* Aktifkan scroll browser normal jika dibuka di HP */
+            }
+            .dashboard-body {
+                height: auto;
+                overflow-y: visible;
+                padding: 15px !important;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr; /* Kotak statistik bertumpuk vertikal murni */
+                gap: 12px;
+            }
+            .chart-box {
+                height: 300px; /* Batas tinggi box chart di layar HP */
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-wrapper">
         <%- include('partials/sidebar-operator') %>
         <main class="content-area">
-            <header class="content-header"><h1>Beranda</h1></header>
+            <header class="content-header">
+                <h1 style="margin:0; font-size:22px; font-weight:600;">Beranda Operator</h1>
+            </header>
+            
             <div class="dashboard-body">
                 <div class="stats-grid">
-                    <div class="stat-card"><p>Total Guru</p><h2><%= stats.guru %></h2></div>
-                    <div class="stat-card"><p>Total Siswa</p><h2><%= stats.siswa %></h2></div>
-                    <div class="stat-card"><p>Total Tugas</p><h2><%= stats.tugas %></h2></div>
-                    <div class="stat-card"><p>Total Kelas</p><h2><%= stats.kelas %></h2></div>
+                    <div class="stat-card" style="border-left: 5px solid #ff5e5e;"><p>Total Guru</p><h2><%= stats.guru %></h2></div>
+                    <div class="stat-card" style="border-left: 5px solid #5b5be3;"><p>Total Siswa</p><h2><%= stats.siswa %></h2></div>
+                    <div class="stat-card" style="border-left: 5px solid #f1c40f;"><p>Total Tugas</p><h2><%= stats.tugas %></h2></div>
+                    <div class="stat-card" style="border-left: 5px solid #2ecc71;"><p>Total Kelas</p><h2><%= stats.kelas %></h2></div>
                 </div>
+
                 <div class="chart-container">
                     <div class="operator-charts-grid">
-                        <div class="chart-box"><h4>Tugas per Kelas</h4><canvas id="chartKelas"></canvas></div>
-                        <div class="chart-box"><h4>Tugas per Guru</h4><canvas id="chartGuru"></canvas></div>
-                        <div class="chart-box"><h4>Persentase Selesai</h4><canvas id="chartSelesai"></canvas></div>
+                        
+                        <div class="chart-box">
+                            <h4>Tugas per Kelas</h4>
+                            <div class="canvas-wrapper"><canvas id="chartKelas"></canvas></div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <h4>Tugas per Guru</h4>
+                            <div class="canvas-wrapper"><canvas id="chartGuru"></canvas></div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <h4>Persentase Selesai</h4>
+                            <div class="canvas-wrapper"><canvas id="chartSelesai"></canvas></div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
         </main>
     </div>
+
     <script>
-        // Inisialisasi Chart.js di sini (seperti kode sebelumnya)
+        // Parsing data agregat JSON aman dari Express server
+        const labelKelas = JSON.parse('<%- JSON.stringify(charts.kelasLabels) %>');
+        const dataKelas  = JSON.parse('[<%= charts.kelasData %>]');
+
+        const labelGuru  = JSON.parse('<%- JSON.stringify(charts.guruLabels) %>');
+        const dataGuru   = JSON.parse('[<%= charts.guruData %>]');
+
+        const dataSelesai = JSON.parse('[<%= charts.selesaiData %>]');
+
+        // 1. Inisialisasi Chart Tugas Per Kelas
+        new Chart(document.getElementById('chartKelas').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: labelKelas,
+                datasets: [{
+                    label: 'Jumlah Tugas',
+                    data: dataKelas,
+                    backgroundColor: '#3498db',
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // 2. Inisialisasi Chart Tugas Per Guru
+        new Chart(document.getElementById('chartGuru').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: labelGuru,
+                datasets: [{
+                    label: 'Jumlah Tugas',
+                    data: dataGuru,
+                    backgroundColor: '#9b59b6',
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // 3. Inisialisasi Doughnut Chart Status Penyelesaian Global
+        new Chart(document.getElementById('chartSelesai').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Selesai', 'Belum Selesai'],
+                datasets: [{
+                    data: dataSelesai,
+                    backgroundColor: ['#2ecc71', '#e74c3c'],
+                    borderWidth: 2
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
     </script>
 </body>
 </html>

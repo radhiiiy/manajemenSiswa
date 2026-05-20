@@ -1,58 +1,283 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Siswa</title>
-    <link rel="stylesheet" href="/style.css"> </head>
+    <title>Dashboard Siswa - Beranda</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ==================== SYSTEM LAYOUT SATU LAYAR FULL ==================== */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Mengunci halaman utama agar tidak bisa discroll di desktop */
+            background-color: #f8fafc;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Pembagian tinggi area konten */
+        .content-header {
+            background-color: #3f6aa5;
+            padding: 15px 30px;
+            color: white;
+            height: 60px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+
+        .dashboard-body {
+            flex: 1;
+            padding: 20px 30px;
+            background-color: #ffffff;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Menyebarkan komponen secara merata pas satu layar */
+            height: calc(100vh - 60px);
+            overflow-y: auto; /* Antisipasi jika resolusi layar terlalu pendek */
+        }
+
+        .student-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Mengatur jarak konstan antar komponen */
+        }
+
+        /* 1. Card Info Kelas (Aksen Kuning) */
+        .class-info-card {
+            background: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #f1f3f5;
+            width: 100%;
+            box-sizing: border-box;
+            flex-shrink: 0; /* Mencegah card ini menyusut */
+        }
+        .class-accent {
+            width: 12px;
+            background-color: #f1c40f;
+        }
+        .class-details {
+            padding: 15px 25px;
+        }
+        .class-details h2 {
+            margin: 0 0 3px 0;
+            font-size: 26px;
+            font-weight: 800;
+            color: #000000;
+        }
+        .class-details p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        /* 2. Grid Statistik Utama (Tiga Card) */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            border: 1px solid #f1f3f5;
+        }
+        .stat-card p {
+            margin: 0 0 4px 0;
+            color: #64748b;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .stat-card h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #1e293b;
+            font-weight: 800;
+        }
+
+        /* 3. Container Grafik Tren (Mengisi Sisa Ruang Layar) */
+        .chart-and-table-grid {
+            flex: 1; /* Memaksa box chart mengambil sisa ruang kosong yang tersedia */
+            min-height: 200px; /* Batas tinggi minimal */
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+        }
+        .content-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #f1f3f5;
+            box-sizing: border-box;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            flex-shrink: 0;
+        }
+        .chart-wrapper {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ==================== MEDIA QUERIES (BREAKPOINT MOBILE) ==================== */
+        @media (max-width: 768px) {
+            html, body {
+                overflow: auto; /* Mengaktifkan kembali scroll biasa jika dibuka di HP */
+            }
+            .dashboard-body {
+                height: auto;
+                overflow-y: visible;
+                padding: 15px !important;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr; /* Stack vertikal di mobile */
+                gap: 12px;
+            }
+            .class-details h2 { font-size: 22px; }
+            .class-details p { font-size: 13px; }
+            .chart-and-table-grid {
+                height: 300px; /* Tinggi statis grafik untuk layar handphone */
+            }
+        }
+    </style>
+</head>
+
 <body>
+    <div class="dashboard-wrapper">
+        <%- include('partials/sidebar-siswa') %>
 
-    <div class="ds-wrapper">
-        <aside class="sidebar-siswa">
-            <div class="profile-section">
-                <div class="profile-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </div>
-                <h3><%= nama_lengkap %></h3>
-            </div>
-            
-            <nav class="sidebar-nav">
-                <a href="/dashboard-siswa" class="active">Beranda</a>
-                <a href="/daftar-tugas">Daftar Tugas</a>
-                <a href="/logout" style="margin-top: auto;">Keluar</a>
-            </nav>
-        </aside>
+            <main class="content-area">
+                <header class="content-header">
+                    <h1 style="margin: 0; font-size: 22px; font-weight: 600;">Beranda Siswa</h1>
+                </header>
 
-        <div class="ds-main">
-            <header class="content-header">
-                <h1>Beranda</h1>
-            </header>
+                <div class="dashboard-body">
+                    <div class="student-container">
+                        
+                        <h2 style="margin-top: 0; margin-bottom: 5px; color: #1e293b; font-size: 20px; font-weight: 700; flex-shrink: 0;">
+                            Selamat Datang, <%= nama_lengkap %>! 👋
+                        </h2>
 
-            <div class="ds-body-center">
-                <div class="ds-grid">
-                    
-                    <div class="ds-card-box ds-purple">
-                        <span class="ds-card-title">Total Tugas</span>
-                        <h2 class="ds-card-num"><%= stats.total %></h2>
-                    </div>
+                        <div class="class-info-card">
+                            <div class="class-accent"></div>
+                            <div class="class-details">
+                                <h2><%= nama_kelas %></h2>
+                                <p>Wali Kelas: <%= wali_kelas %></p>
+                            </div>
+                        </div>
 
-                    <div class="ds-card-box ds-red">
-                        <span class="ds-card-title">Tugas Belum Selesai</span>
-                        <h2 class="ds-card-num"><%= stats.belum %></h2>
-                    </div>
+                        <div class="stats-grid">
+                            <div class="stat-card" style="border-left: 5px solid #3498db;">
+                                <p>Total Tugas Kelas</p>
+                                <h2><%= stats.total %></h2>
+                            </div>
+                            <div class="stat-card" style="border-left: 5px solid #e74c3c;">
+                                <p>Belum Diselesaikan</p>
+                                <h2><%= stats.belum %></h2>
+                            </div>
+                            <div class="stat-card" style="border-left: 5px solid #2ecc71;">
+                                <p>Tugas Sudah Selesai</p>
+                                <h2><%= stats.selesai %></h2>
+                            </div>
+                        </div>
 
-                    <div class="ds-card-box ds-green">
-                        <span class="ds-card-title">Tugas Selesai</span>
-                        <h2 class="ds-card-num"><%= stats.selesai %></h2>
-                    </div>
+                        <div class="chart-and-table-grid">
+                            <div class="content-card">
+                                <h3>Tren Status Tugas Mingguan</h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="lineChartSiswa"></canvas>
+                                </div>
+                            </div>
+                        </div>
 
-                </div>
-            </div>
-        </div>
+                    </div> </div>
+            </main>
     </div>
 
+    <script>
+        const ctx = document.getElementById('lineChartSiswa').getContext('2d');
+        const dataSelesaiServer = JSON.parse('[<%= chartData.selesai %>]');
+        const dataBelumServer = JSON.parse('[<%= chartData.belum %>]');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                datasets: [
+                    {
+                        label: 'Selesai',
+                        data: dataSelesaiServer,
+                        borderColor: '#2ecc71',
+                        backgroundColor: '#2ecc71',
+                        tension: 0.3,
+                        fill: false,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Belum Selesai',
+                        data: dataBelumServer,
+                        borderColor: '#e74c3c',
+                        backgroundColor: '#e74c3c',
+                        tension: 0.3,
+                        fill: false,
+                        pointRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Diubah ke FALSE agar tinggi grafik fleksibel mengikuti sisa ruang layar
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

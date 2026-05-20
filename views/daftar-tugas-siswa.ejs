@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Tugas Siswa</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <%- include('partials/sidebar-siswa') %>
+
+            <main class="content-area">
+                <header class="content-header">
+                    <h1 style="margin: 0; font-size: 24px; font-weight: 600;">Daftar Tugas</h1>
+                </header>
+
+                <div class="dashboard-body">
+                    <div class="list-container">
+                        
+                        <% if (!locals.data_tugas || data_tugas.length === 0) { %>
+                            <div style="text-align: center; padding: 40px; color: #94a3b8; font-style: italic; font-size: 16px;">
+                                Belum ada tugas yang didistribusikan untuk kelas Anda.
+                            </div>
+                        <% } else { %>
+                            <% data_tugas.forEach(tugas => { %>
+                                <div class="task-list-card">
+                                    
+                                    <div class="card-left-section">
+                                        <h2 class="task-title-text"><%= tugas.judul_tugas %></h2>
+                                        <div class="teacher-info-wrapper">
+                                            <div class="teacher-avatar-circle">
+                                                <%= tugas.nama_guru ? tugas.nama_guru.charAt(0).toUpperCase() : 'G' %>
+                                            </div>
+                                            <p class="teacher-name-text"><%= tugas.nama_guru || 'Guru Pengajar' %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-right-section">
+                                        <div class="status-icon-box">
+                                            <% if (tugas.status === 'Selesai') { %>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;">
+                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                    <polyline points="13 17 15 19 19 15"></polyline>
+                                                    <line x1="10" y1="13" x2="8" y2="13"></line>
+                                                    <line x1="9" y1="17" x2="8" y2="17"></line>
+                                                </svg>
+                                            <% } else { %>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="#ff5e5e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;">
+                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                    <line x1="14" y1="15" x2="18" y2="19"></line>
+                                                    <line x1="18" y1="15" x2="14" y2="19"></line>
+                                                    <line x1="10" y1="13" x2="8" y2="13"></line>
+                                                </svg>
+                                            <% } %>
+                                        </div>
+                                        <a href="/detail-tugas/<%= tugas.id_tugas %>" class="btn-detail-tugas">detail tugas</a>
+                                    </div>
+
+                                </div>
+                            <% }) %>
+                        <% } %>
+
+                    </div>
+                </div>
+            </main>
+    </div>
+</body>
+
+</html>

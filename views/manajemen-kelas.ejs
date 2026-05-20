@@ -1,115 +1,144 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Kelas</title>
     <link rel="stylesheet" href="/style.css">
+    <style>
+    </style>
 </head>
-
 <body>
+
     <div class="dashboard-wrapper">
         <%- include('partials/sidebar-operator') %>
 
-            <main class="content-area">
-                <header class="content-header">
-                    <h1>Manajemen Kelas</h1>
-                </header>
-                <button class="btn-add" onclick="openModal('modalTambahKelas')">+ Tambah Kelas</button>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nama Kelas</th>
-                                <th>Wali Kelas</th>
-                                <th>Jumlah Murid</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% data_kelas.forEach(k=> { %>
-                                <tr>
-                                    <td>
-                                        <%= k.id_kelas %>
-                                    </td>
-                                    <td><strong>
-                                            <%= k.nama_kelas %>
-                                        </strong></td>
-                                    <td>
-                                        <%= k.wali_kelas || '—' %>
-                                    </td>
-                                    <td>
-                                        <%= k.jumlah_murid %> Siswa
-                                    </td>
-                                    <td>
-                                        <button class="btn-edit" onclick="editKelas('<%= k.id_kelas %>')">Edit</button>
-                                        <button class="btn-hapus"
-                                            onclick="hapusKelas('<%= k.id_kelas %>')">Hapus</button>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                        </tbody>
-                    </table>
-                </div>
+        <main class="kelas-content-wrapper">
+            <header class="content-header">
+                <h1>Manajemen Kelas</h1>
+            </header>
 
-            </main>
+            <section class="kelas-topbar">
+                <button class="kelas-btn-add" onclick="openModal('modalTambahKelas')">
+                    + Tambah Kelas
+                </button>
+            </section>
+
+            <section class="kelas-table-wrapper">
+                <table class="kelas-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Kelas</th>
+                            <th>Wali Kelas</th>
+                            <th>Jumlah Murid</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% data_kelas.forEach(k=> { %>
+                            <tr>
+                                <td>
+                                    <span class="kelas-id-badge"><%= k.id_kelas %></span>
+                                </td>
+                                <td>
+                                    <a class="kelas-link" onclick="lihatDetailMurid('<%= k.id_kelas %>', '<%= k.nama_kelas %>')">
+                                        <%= k.nama_kelas %>
+                                    </a>
+                                </td>
+                                <td><%= k.wali_kelas || '—' %></td>
+                                <td>
+                                    <span class="kelas-jumlah"><%= k.jumlah_murid %> Siswa</span>
+                                </td>
+                                <td class="kelas-action-group">
+                                    <button class="kelas-btn-edit" onclick="editKelas('<%= k.id_kelas %>')">Edit</button>
+                                    <button class="kelas-btn-delete" onclick="hapusKelas('<%= k.id_kelas %>')">Hapus</button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        </main>
     </div>
 
-    <div id="modalTambahKelas" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalTambahKelas')">&times;</span>
+    <div id="modalTambahKelas" class="kelas-modal-overlay">
+        <div class="kelas-modal-box">
+            <span class="kelas-modal-close" onclick="closeModal('modalTambahKelas')">&times;</span>
             <h2>Tambah Kelas Baru</h2>
             <form action="/api/tambah-kelas" method="POST">
-                <div class="form-group">
+                <div class="kelas-form-group">
                     <label>Nama Kelas</label>
                     <input type="text" name="nama_kelas" placeholder="Contoh: X PPLG 1" required>
                 </div>
-                <div class="form-group">
+                <div class="kelas-form-group">
                     <label>Pilih Wali Kelas</label>
                     <select name="id_wali">
                         <option value="">-- Tanpa Wali Kelas --</option>
                         <% data_guru.forEach(g=> { %>
-                            <option value="<%= g.id_guru %>">
-                                <%= g.nama_lengkap %>
-                            </option>
-                            <% }) %>
+                            <option value="<%= g.id_guru %>"><%= g.nama_lengkap %></option>
+                        <% }) %>
                     </select>
                 </div>
-                <button type="submit" class="btn-save">Simpan Kelas</button>
+                <button type="submit" class="kelas-btn-save">Simpan Kelas</button>
             </form>
         </div>
     </div>
 
-    <div id="modalEditKelas" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalEditKelas')">&times;</span>
+    <div id="modalEditKelas" class="kelas-modal-overlay">
+        <div class="kelas-modal-box">
+            <span class="kelas-modal-close" onclick="closeModal('modalEditKelas')">&times;</span>
             <h2>Edit Kelas</h2>
             <form action="/api/update-kelas" method="POST">
                 <input type="hidden" name="id_kelas" id="edit-id-kelas">
-                <div class="form-group">
+                <div class="kelas-form-group">
                     <label>Nama Kelas</label>
                     <input type="text" name="nama_kelas" id="edit-nama-kelas" required>
                 </div>
-                <div class="form-group">
+                <div class="kelas-form-group">
                     <label>Pilih Wali Kelas</label>
                     <select name="id_wali" id="edit-wali-kelas">
                         <option value="">-- Tanpa Wali Kelas --</option>
                         <% data_guru.forEach(g=> { %>
-                            <option value="<%= g.id_guru %>">
-                                <%= g.nama_lengkap %>
-                            </option>
-                            <% }) %>
+                            <option value="<%= g.id_guru %>"><%= g.nama_lengkap %></option>
+                        <% }) %>
                     </select>
                 </div>
-                <button type="submit" class="btn-save">Update Kelas</button>
+                <button type="submit" class="kelas-btn-save">Update Kelas</button>
             </form>
         </div>
     </div>
 
+    <div id="modalDetailMurid" class="kelas-modal-overlay">
+        <div class="kelas-modal-box" style="max-width: 650px; width: 90%;">
+            <span class="kelas-modal-close" onclick="closeModal('modalDetailMurid')">&times;</span>
+            <h2 id="detail-judul-kelas">Detail Murid</h2>
+            
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table class="murid-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>NISN</th>
+                            <th>Nama Lengkap</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detail-murid-rows">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
 
         function editKelas(id) {
             fetch('/api/get-kelas/' + id)
@@ -127,7 +156,39 @@
                 window.location.href = '/api/hapus-kelas/' + id;
             }
         }
+
+        // FUNGSI BARU: Ambil data murid di kelas terkait secara real-time dari database
+        function lihatDetailMurid(idKelas, namaKelas) {
+            document.getElementById('detail-judul-kelas').innerText = "Daftar Murid - " + namaKelas;
+            const tableRows = document.getElementById('detail-murid-rows');
+            tableRows.innerHTML = '<tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>';
+            
+            openModal('modalDetailMurid');
+
+            fetch('/api/get-murid-kelas/' + idKelas)
+                .then(res => res.json())
+                .then(data => {
+                    tableRows.innerHTML = '';
+                    if (data.length === 0) {
+                        tableRows.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8; font-style:italic;">Belum ada murid di kelas ini.</td></tr>';
+                        return;
+                    }
+                    data.forEach((murid, index) => {
+                        tableRows.innerHTML += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td><strong>${murid.nisn}</strong></td>
+                                <td>${murid.nama_lengkap}</td>
+                                <td>${murid.email || '—'}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    tableRows.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal mengambil data murid.</td></tr>';
+                });
+        }
     </script>
 </body>
-
 </html>

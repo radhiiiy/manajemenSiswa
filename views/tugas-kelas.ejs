@@ -68,14 +68,14 @@
                                         </td>
                                         <td>
                                             <div class="btn-action-wrapper">
-                                                <button class="btn-action btn-blue" onclick="bukaModalEdit('<%= item.id_tugas %>', '<%= item.judul_tugas %>', '<%= item.tanggal_raw %>')">✏️ Edit</button>
+                                                <button class="btn-action btn-blue" onclick="bukaModalEdit('<%= item.id_tugas %>', '<%= item.judul_tugas %>', '<%= item.tanggal_raw %>')">Edit</button>
                                                 
-                                                <button class="btn-action btn-red" onclick="hapusTugas('<%= item.id_tugas %>')">❌ Hapus</button>
+                                                <button class="btn-action btn-red" onclick="hapusTugas('<%= item.id_tugas %>')">Hapus</button>
                                                 
                                                 <% if (item.status_tugas !== 'Selesai') { %>
-                                                    <a href="/api/ubah-status-tugas/<%= item.id_tugas %>?id_kelas=<%= id_kelas %>" class="btn-action btn-green">✔️ Tandai selesai</a>
+                                                    <a href="/api/ubah-status-tugas/<%= item.id_tugas %>?id_kelas=<%= id_kelas %>" class="btn-action btn-green">Tandai selesai</a>
                                                 <% } else { %>
-                                                    <button class="btn-action btn-disabled" disabled>✔️ Selesai</button>
+                                                    <button class="btn-action btn-disabled" disabled>Selesai</button>
                                                 <% } %>
                                             </div>
                                         </td>
